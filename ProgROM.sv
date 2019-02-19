@@ -19,7 +19,7 @@
 //////////////////////////////////////////////////////////////////////////////
 //
 
-module ProgRom(
+module ProgROM(
 input PROG_CLK,
 input [9:0] PROG_ADDR,
 output logic [17:0] PROG_IR,
@@ -32,7 +32,7 @@ logic [17:0] rom [0:1023];
 
 // initialize the ROM with the prog_rom.mem file
 initial begin
-$readmemh("LED_BLINK_MCU.mem", rom, 0, 1023);
+$readmemh("RATtest0.mem", rom, 0, 1023);
 end
 
 always_ff @(posedge PROG_CLK) begin

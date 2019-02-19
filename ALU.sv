@@ -19,16 +19,16 @@ case(SEL)
 2 : temp= {1'b0, A} - {1'b0, B};                 	//sub
 3 : temp= {1'b0, A} - {1'b0, B} - {1'b0, CIN};   	//subc
 4 : temp=  {1'b0, A} - {1'b0, B};                  	//cmp
-5 : temp = {1'b0, A} & {1'b0, B};                                             	//and
-6 : temp = {1'b0, A} | {1'b0, B};                                             	//or                                          
-7 : temp = {1'b0, A} ^ {1'b0, B};                                             	//exor
+5 : temp = {1'b0, A} & {1'b0, B};                   //and
+6 : temp = {1'b0, A} | {1'b0, B};                   //or                                          
+7 : temp = {1'b0, A} ^ {1'b0, B};                   //exor
 8 : temp = {1'b0, A} & {1'b0, B};                   // test
-9 : temp = {A,CIN};                                                    	//lsl	
-10 : temp = {A[0],CIN,A[7:1]};                                                 	    //lsr
-11 : temp = {A[7],A[6:0],CIN}; //rol	
-12 : temp = {A[0],CIN, A[7:1]};                                                        //ror
-13 : temp = {A[0],A[7],A[7:1]};                                                          //asr 
-14 : temp = {1'b0, A};                                                          //mov                                               
+9 : temp = {A,CIN};                                 //lsl	
+10 : temp = {A[0],CIN,A[7:1]};                      //lsr
+11 : temp = {A[7],A[6:0],CIN};                      //rol	
+12 : temp = {A[0],CIN, A[7:1]};                     //ror
+13 : temp = {A[0],A[7],A[7:1]};                     //asr 
+14 : temp = {1'b0, A};                              //mov                                               
 15 : temp = 9'b000000000;
  
 endcase
