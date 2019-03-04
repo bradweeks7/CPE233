@@ -39,8 +39,7 @@ module RAT_WRAPPER(
        logic s_interrupt;
        logic RESET_IN;
        logic SlowCLK = 1'b0;     // 50 MHz clock
-       logic An_OUT;
-       logic Cat_OUT;
+       logic INT_BTN;
        
        // Register definitions for output devices ///////////////////////////////
        logic [7:0]  MCU_IN_PORT;
@@ -49,9 +48,6 @@ module RAT_WRAPPER(
        logic [7:0]  SS_C_OUT;
        logic [3:0]  SS_A_OUT;
        
-       logic [7:0] D_led;
-       logic [7:0] D_ss; 
-       
        
    
        // Declare RAT_CPU ///////////////////////////////////////////////////////
@@ -59,7 +55,7 @@ module RAT_WRAPPER(
                    .PORT_ID_MCU(PORT_ID_OUT), .IO_STRB_MCU(IO_STRB_OUT), .RESET_MCU(RESET_IN),
                    .INT_R(s_interrupt), .CLK(SlowCLK));
        SevSegDisp SV (.CLK(SlowCLK), .MODE(1'b1), .DATA_IN(SevSegIN), .CATHODES(SS_C_OUT), .ANODES(SS_A_OUT));
-       DEBOUNCE DB(.CLK(SlowCLK), .BTN(BTNI), .DB_BTN(s_interrupt));
+       DEBOUNCE DB(.CLK(SlowCLK), .BTN(INT_BTN), .DB_BTN(s_interrupt));
        
        // Clock Divider to create 50 MHz Clock //////////////////////////////////
        always_ff @(posedge CLK) begin
@@ -68,27 +64,30 @@ module RAT_WRAPPER(
      
     // MUX for selecting what input to read //////////////////////////////////
     always_comb begin
-        if (s_port_id == SWITCHES_ID)
-            s_input_port = SWITCHES;
+        if (PORT_ID_OUT == SWITCHES_ID)
+           MCU_IN_PORT = SWITCHES;
         else
-            s_input_port = 8'h00;
+           MCU_IN_PORT = 8'h00;
     end
    
     // MUX for updating output registers /////////////////////////////////////
     // Register updates depend on rising clock edge and asserted load signal
     always_ff @ (posedge CLK) begin
-        if (s_load == 1'b1) begin
-            if (s_port_id == LEDS_ID)
-                r_leds <= s_output_port;
+        if (IO_STRB_OUT == 1'b1) begin
+            if (PORT_ID_OUT == LEDS_ID) begin
+                r_leds <= MCU_OUT_PORT_OUT;
             end
-            if (s_port_id ==
-        
-       end
+            if (PORT_ID_OUT == SEVSEG_ID) begin
+               CATH_OUT <= SS_C_OUT;
+               ANO_OUT <=  SS_A_OUT;
+            end
+            end
+    end
         
      
     // Connect Signals ///////////////////////////////////////////////////////
-    assign s_reset = BTNC;
-    assign s_interrupt = 1'b0;  // no interrupt used yet
+    assign RESET_IN = BTNC;
+    assign INT_BTN = BTNI;  // no interrupt used yet
      
     // Output Assignments ////////////////////////////////////////////////////
     assign LEDS = r_leds;
